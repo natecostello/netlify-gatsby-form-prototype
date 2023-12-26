@@ -1,15 +1,46 @@
 import * as React from "react";
 
 export default function FormPage() {
+  const [files, setFiles] = React.useState([]);
+
+  const handleFileChange = (event) => {
+    // Add the newly selected files to the existing files array
+    setFiles((prevFiles) => [...prevFiles, ...Array.from(event.target.files)]);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+
+    // Append each file as a separate field
+    files.forEach((file, index) => {
+      formData.append(`file${index}`, file);
+    });
+
+    // Append other form data
+    formData.append("name", event.target.name.value);
+    formData.append("email", event.target.email.value);
+    formData.append("message", event.target.message.value);
+
+    // Convert formData to URLSearchParams for Netlify
+    const urlSearchParams = new URLSearchParams();
+    for (const pair of formData) {
+      urlSearchParams.append(pair[0], pair[1]);
+    }
+
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: urlSearchParams,
+    })
+      .then(() => alert("Thank you for your submission"))
+      .catch((error) => alert(error));
+  };
+
   return (
     <div>
-      <form
-        name="contact"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        enctype="multipart/form-data"
-      >
+      <form name="contact" onSubmit={handleSubmit}>
         <input type="hidden" name="bot-field" />
         <input type="hidden" name="form-name" value="contact" />
         <p>
@@ -37,10 +68,19 @@ export default function FormPage() {
           </label>
         </p>
         <p>
-          <input type="file" name="file-upload" />
+          <label>
+            Your Files:{" "}
+            <input type="file" onChange={handleFileChange} multiple />
+          </label>
         </p>
         <p>
-          <input type="submit"></input>
+          Selected Files:{" "}
+          {files.map((file) => (
+            <div key={file.name}>{file.name}</div>
+          ))}
+        </p>
+        <p>
+          <input type="submit" />
         </p>
       </form>
     </div>
