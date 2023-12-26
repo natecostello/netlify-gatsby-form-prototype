@@ -34,11 +34,10 @@ export default function FormPage() {
           </label>
         </p>
         <p>
-          <button type="submit">Send</button>
+          <input type="file" name="file-upload" />
         </p>
         <p>
-          <input type="file" name="file-upload" />
-          <button type="submit">Submit</button>
+          <input type="submit"></input>
         </p>
       </form>
     </div>
