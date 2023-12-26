@@ -40,7 +40,12 @@ export default function FormPage() {
 
   return (
     <div>
-      <form name="contact" onSubmit={handleSubmit}>
+      <form
+        name="contact"
+        enctype="multipart/form-data"
+        data-netlify="true"
+        onSubmit={handleSubmit}
+      >
         <input type="hidden" name="bot-field" />
         <input type="hidden" name="form-name" value="contact" />
         <p>
