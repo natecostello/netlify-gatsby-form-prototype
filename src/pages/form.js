@@ -4,21 +4,42 @@ export default function FormPage() {
   return (
     <div>
       <form
-        name="file-upload"
+        name="contact"
         method="POST"
         data-netlify="true"
         enctype="multipart/form-data"
       >
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required></input>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required></input>
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone"></input>
-        <label for="comments">Comments:</label>
-        <textarea id="comments" name="comments" rows="4" required></textarea>
-        <input type="file" name="file-upload" />
-        <button type="submit">Submit</button>
+        <p>
+          <label>
+            Your Name: <input type="text" name="name" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Your Email: <input type="email" name="email" />
+          </label>
+        </p>
+        <p>
+          <label>
+            Your Role:{" "}
+            <select name="role[]" multiple>
+              <option value="leader">Leader</option>
+              <option value="follower">Follower</option>
+            </select>
+          </label>
+        </p>
+        <p>
+          <label>
+            Message: <textarea name="message" rows="4"></textarea>
+          </label>
+        </p>
+        <p>
+          <button type="submit">Send</button>
+        </p>
+        <p>
+          <input type="file" name="file-upload" />
+          <button type="submit">Submit</button>
+        </p>
       </form>
     </div>
   );
