@@ -24,6 +24,7 @@ export default function FormPage() {
     formData.append("email", event.target.email.value);
     formData.append("message", event.target.message.value);
     console.log(JSON.stringify(formData));
+    console.log(event);
     // Convert formData to URLSearchParams for Netlify
     // const urlSearchParams = new URLSearchParams();
     // for (const pair of formData) {
