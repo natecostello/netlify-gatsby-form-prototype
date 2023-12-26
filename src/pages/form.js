@@ -31,7 +31,7 @@ export default function FormPage() {
 
     fetch("/", {
       method: "POST",
-      body: new URLSearchParams(formData).toString(),
+      body: formData,
     })
       .then(() => alert("Thank you for your submission"))
       .catch((error) => alert(error));
