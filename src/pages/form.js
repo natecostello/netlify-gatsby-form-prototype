@@ -31,7 +31,6 @@ export default function FormPage() {
 
     fetch("/", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: urlSearchParams,
     })
       .then(() => alert("Thank you for your submission"))
