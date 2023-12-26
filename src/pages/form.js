@@ -24,14 +24,14 @@ export default function FormPage() {
     formData.append("message", event.target.message.value);
 
     // Convert formData to URLSearchParams for Netlify
-    const urlSearchParams = new URLSearchParams();
-    for (const pair of formData) {
-      urlSearchParams.append(pair[0], pair[1]);
-    }
+    // const urlSearchParams = new URLSearchParams();
+    // for (const pair of formData) {
+    //   urlSearchParams.append(pair[0], pair[1]);
+    // }
 
     fetch("/", {
       method: "POST",
-      body: urlSearchParams,
+      body: new URLSearchParams(formData).toString(),
     })
       .then(() => alert("Thank you for your submission"))
       .catch((error) => alert(error));
