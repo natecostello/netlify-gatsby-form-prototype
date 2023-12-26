@@ -43,12 +43,13 @@ export default function FormPage() {
     <div>
       <form
         name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
         enctype="multipart/form-data"
         data-netlify="true"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="bot-field" />
-        <input type="hidden" name="form-name" value="contact" />
         <p>
           <label>
             Your Name: <input type="text" name="name" />
