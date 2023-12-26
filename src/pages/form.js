@@ -74,7 +74,7 @@ export default function FormPage() {
         <p>
           <label>
             Your Files:{" "}
-            <input type="file" onChange={handleFileChange} multiple />
+            <input type="file" name="file0" onChange={handleFileChange} />
           </label>
         </p>
         <p>
