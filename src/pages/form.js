@@ -16,6 +16,7 @@ export default function FormPage() {
     // Append each file as a separate field
     files.forEach((file, index) => {
       formData.append(`file${index}`, file);
+      console.log(`file${index}`);
     });
 
     // Append other form data
@@ -75,6 +76,8 @@ export default function FormPage() {
           <label>
             Your Files:{" "}
             <input type="file" name="file0" onChange={handleFileChange} />
+            <input type="file" name="file1" onChange={handleFileChange} />
+            <input type="file" name="file2" onChange={handleFileChange} />
           </label>
         </p>
         <p>
