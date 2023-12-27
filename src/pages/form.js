@@ -13,6 +13,7 @@ function encode(data) {
 
 export default function Contact() {
   const [state, setState] = React.useState({});
+  const [firstFileSelected, setFirstFileSelected] = React.useState(false);
 
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -20,6 +21,9 @@ export default function Contact() {
 
   const handleAttachment = (e) => {
     setState({ ...state, [e.target.name]: e.target.files[0] });
+    if (e.target.name === "firstAttachment") {
+      setFirstFileSelected(!!e.target.files[0]);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -66,22 +70,24 @@ export default function Contact() {
           <br />
           <input
             type="file"
-            name="firstattachment"
+            name="firstAttachment"
             onChange={handleAttachment}
           />
         </label>
       </p>
-      <p>
-        <label>
-          File 2:
-          <br />
-          <input
-            type="file"
-            name="secondattachment"
-            onChange={handleAttachment}
-          />
-        </label>
-      </p>
+      {firstFileSelected && (
+        <p>
+          <label>
+            Second File:
+            <br />
+            <input
+              type="file"
+              name="secondAttachment"
+              onChange={handleAttachment}
+            />
+          </label>
+        </p>
+      )}
       <p>
         <button type="submit">Send</button>
       </p>
