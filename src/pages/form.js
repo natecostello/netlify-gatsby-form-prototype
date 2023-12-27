@@ -64,7 +64,22 @@ export default function Contact() {
         <label>
           File:
           <br />
-          <input type="file" name="attachment" onChange={handleAttachment} />
+          <input
+            type="file"
+            name="firstattachment"
+            onChange={handleAttachment}
+          />
+        </label>
+      </p>
+      <p>
+        <label>
+          File 2:
+          <br />
+          <input
+            type="file"
+            name="secondattachment"
+            onChange={handleAttachment}
+          />
         </label>
       </p>
       <p>
