@@ -1,48 +1,78 @@
-import * as React from "react";
+import React from "react";
+import { navigate } from "gatsby-link";
 
-export default function FormPage() {
+function encode(data) {
+  const formData = new FormData();
+
+  for (const key of Object.keys(data)) {
+    formData.append(key, data[key]);
+  }
+
+  return formData;
+}
+
+export default function Contact() {
+  const [state, setState] = React.useState({});
+
+  const handleChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleAttachment = (e) => {
+    setState({ ...state, [e.target.name]: e.target.files[0] });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    fetch("/", {
+      method: "POST",
+      body: encode({
+        "form-name": form.getAttribute("name"),
+        ...state,
+      }),
+    })
+      .then(() => navigate(form.getAttribute("action")))
+      .catch((error) => alert(error));
+  };
+
   return (
-    <div>
-      <form
-        name="contact"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        enctype="multipart/form-data"
-      >
-        <input type="hidden" name="bot-field" />
-        <input type="hidden" name="form-name" value="contact" />
-        <p>
-          <label>
-            Your Name: <input type="text" name="name" />
-          </label>
-        </p>
-        <p>
-          <label>
-            Your Email: <input type="email" name="email" />
-          </label>
-        </p>
-        <p>
-          <label>
-            Your Role:{" "}
-            <select name="role[]" multiple>
-              <option value="leader">Leader</option>
-              <option value="follower">Follower</option>
-            </select>
-          </label>
-        </p>
-        <p>
-          <label>
-            Message: <textarea name="message" rows="4"></textarea>
-          </label>
-        </p>
-        <p>
-          <input type="file" name="file-upload" />
-        </p>
-        <p>
-          <input type="submit"></input>
-        </p>
-      </form>
-    </div>
+    <form
+      name="file-upload"
+      method="post"
+      action="/"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      onSubmit={handleSubmit}
+    >
+      {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
+      <input type="hidden" name="form-name" value="file-upload" />
+      <p hidden>
+        <label>
+          Don’t fill this out:{" "}
+          <input name="bot-field" onChange={handleChange} />
+        </label>
+      </p>
+      <p>
+        <label>
+          Your name:
+          <br />
+          <input type="text" name="name" onChange={handleChange} />
+        </label>
+      </p>
+      <p>
+        <label>
+          File:
+          <br />
+          <input type="file" name="attachment" onChange={handleAttachment} />
+        </label>
+      </p>
+      <p>
+        <button type="submit">Send</button>
+      </p>
+      <p>
+        Note: multiple file uploads are not supported by Netlify at this time.
+      </p>
+    </form>
   );
 }
