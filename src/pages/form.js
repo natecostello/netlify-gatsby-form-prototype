@@ -1,15 +1,15 @@
 import React from "react";
 import { navigate } from "gatsby-link";
 
-function encode(data) {
-  const formData = new FormData();
+// function encode(data) {
+//   const formData = new FormData();
 
-  for (const key of Object.keys(data)) {
-    formData.append(key, data[key]);
-  }
+//   for (const key of Object.keys(data)) {
+//     formData.append(key, data[key]);
+//   }
 
-  return formData;
-}
+//   return formData;
+// }
 
 export default function Contact() {
   const [state, setState] = React.useState({});
@@ -69,12 +69,35 @@ export default function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
+
+    const formData = new FormData();
+
+    // Append regular form fields
+    for (const key in state) {
+      if (
+        state.hasOwnProperty(key) &&
+        key !== "firstAttachment" &&
+        key !== "secondAttachment"
+      ) {
+        formData.append(key, state[key]);
+      }
+    }
+
+    // Append file fields if they exist
+    if (state.firstAttachment) {
+      formData.append("firstAttachment", state.firstAttachment, firstFileName);
+    }
+    if (state.secondAttachment) {
+      formData.append(
+        "secondAttachment",
+        state.secondAttachment,
+        secondFileName
+      );
+    }
+
     fetch("/", {
       method: "POST",
-      body: encode({
-        "form-name": form.getAttribute("name"),
-        ...state,
-      }),
+      body: formData,
     })
       .then(() => navigate(form.getAttribute("action")))
       .catch((error) => alert(error));
