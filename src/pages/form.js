@@ -74,6 +74,9 @@ export default function Contact() {
 
     const formData = new FormData();
 
+    // Append the form-name field
+    formData.append("form-name", form.getAttribute("name"));
+
     // Append regular form fields
     for (const key in state) {
       if (
