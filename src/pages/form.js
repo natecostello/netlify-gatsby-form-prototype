@@ -178,8 +178,9 @@ export default function Contact() {
           Second File:
           <br />
           <input
-            //type="file"
-            type="hidden"
+            type="file"
+            //type="hidden"
+            style={{ display: "none" }}
             name="secondAttachment"
             onChange={handleAttachment}
           />
