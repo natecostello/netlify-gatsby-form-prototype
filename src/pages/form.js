@@ -172,20 +172,20 @@ export default function Contact() {
         </label>
       </p>
 
-      {firstFileSelected && (
-        <p>
-          <label>
-            Second File:
-            <br />
-            <input
-              type="file"
-              name="secondAttachment"
-              onChange={handleAttachment}
-            />
-            {secondFileName && <span>Selected file: {secondFileName}</span>}
-          </label>
-        </p>
-      )}
+      {/* {firstFileSelected && ( */}
+      <p>
+        <label>
+          Second File:
+          <br />
+          <input
+            type="file"
+            name="secondAttachment"
+            onChange={handleAttachment}
+          />
+          {secondFileName && <span>Selected file: {secondFileName}</span>}
+        </label>
+      </p>
+      {/* )} */}
       <p>
         <button type="submit">Send</button>
       </p>
