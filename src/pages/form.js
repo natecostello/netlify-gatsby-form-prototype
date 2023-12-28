@@ -178,7 +178,8 @@ export default function Contact() {
           Second File:
           <br />
           <input
-            type="file"
+            //type="file"
+            type="hidden"
             name="secondAttachment"
             onChange={handleAttachment}
           />
