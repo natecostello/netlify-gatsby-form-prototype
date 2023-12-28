@@ -70,6 +70,8 @@ export default function Contact() {
     e.preventDefault();
     const form = e.target;
 
+    console.log("State before submission:", state); // Log the state
+
     const formData = new FormData();
 
     // Append regular form fields
@@ -85,14 +87,29 @@ export default function Contact() {
 
     // Append file fields if they exist
     if (state.firstAttachment) {
+      console.log(
+        "Appending first file:",
+        state.firstAttachment,
+        firstFileName
+      ); // Log first file details
       formData.append("firstAttachment", state.firstAttachment, firstFileName);
     }
     if (state.secondAttachment) {
+      console.log(
+        "Appending second file:",
+        state.secondAttachment,
+        secondFileName
+      ); // Log second file details
       formData.append(
         "secondAttachment",
         state.secondAttachment,
         secondFileName
       );
+    }
+
+    // Log FormData contents
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
     }
 
     fetch("/", {
