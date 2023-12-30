@@ -5,6 +5,7 @@ export default function Home() {
     <div>
       <p>Hello world!</p>
       <Link to="/form">Form Page</Link>
+      <p></p>
       <Link to="/dropzone-form"> Drop-zone Form Page</Link>
     </div>
   );
