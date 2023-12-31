@@ -111,7 +111,7 @@ function MyDropzone() {
     allFiles.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
-
+    //
     try {
       const response = await fetch("/", {
         method: "POST",
