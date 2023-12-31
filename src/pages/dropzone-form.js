@@ -3,29 +3,48 @@ import { useDropzone } from "react-dropzone";
 
 function MyDropzone() {
   const [allFiles, setAllFiles] = useState([]);
-  const maxFiles = 10;
-  const pdfThumbnail = "/pdfThumbnail.png"; // URL for the PDF thumbnail in the static folder
+  const [totalSize, setTotalSize] = useState(0);
+  const pdfThumbnail = "/pdfThumbnail.png";
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setAllFiles((prevFiles) => {
-      // Filter out any non-file objects or undefined values
-      const filteredFiles = acceptedFiles.filter(
-        (file) => file instanceof File
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const maxFilesSize = 8 * 1024 * 1024; // 8 MB in bytes
+      const maxFiles = 10; // Maximum number of files
+
+      // Calculate the size of the new files
+      const newSize = acceptedFiles.reduce((acc, file) => acc + file.size, 0);
+
+      // Check if adding new files exceeds the size limit
+      if (totalSize + newSize > maxFilesSize) {
+        alert("Adding these files would exceed the 8MB limit.");
+        return;
+      }
+
+      // Check if adding new files exceeds the size limit
+      if (allFiles.length + acceptedFiles.length > maxFiles) {
+        alert("Adding these files would exceed the 10 file limit.");
+        return;
+      }
+
+      // Update total size
+      setTotalSize((currentSize) => currentSize + newSize);
+
+      // Append new files with preview
+      const newFilesWithPreview = acceptedFiles.map((file) => ({
+        ...file,
+        preview:
+          file.type === "application/pdf"
+            ? pdfThumbnail
+            : URL.createObjectURL(file),
+      }));
+
+      // Update all files list
+      setAllFiles((currentFiles) =>
+        [...currentFiles, ...newFilesWithPreview].slice(0, maxFiles)
       );
-
-      // Create previews for new files
-      const newFilesWithPreview = filteredFiles.map((file) => {
-        if (file.type === "application/pdf") {
-          return { ...file, preview: pdfThumbnail };
-        } else {
-          return { ...file, preview: URL.createObjectURL(file) };
-        }
-      });
-
-      // Combine with previous files, but ensure total does not exceed maxFiles
-      return [...prevFiles, ...newFilesWithPreview].slice(0, maxFiles);
-    });
-  }, []);
+    },
+    [totalSize, allFiles]
+  );
 
   const thumbs = allFiles.map((file, index) => (
     <div
@@ -80,22 +99,59 @@ function MyDropzone() {
     },
   });
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    // Append the form name
+    formData.append("form-name", "draganddropform-name");
+
+    // Append each file to the form data
+    allFiles.forEach((file, index) => {
+      formData.append(`file${index}`, file);
+    });
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData,
+        // headers: {
+        //   Accept: "application/x-www-form-urlencoded;charset=UTF-8",
+        //   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        // },
+      });
+
+      if (response.ok) {
+        alert("Form submitted successfully!");
+        // Additional success handling
+      } else {
+        alert("Form submission failed!");
+      }
+    } catch (error) {
+      alert("An error occurred:", error.message);
+    }
+  };
+
   return (
     <>
       <div>
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
           <p>
-            Drag 'n' drop some files here, or click to select files (max 10)
+            Drag 'n' drop some files here, or click to select files (max 10
+            files, max 8MB total)
           </p>
         </div>
         <aside style={{ display: "flex", flexWrap: "wrap" }}>{thumbs}</aside>
+        <div>Total Size: {(totalSize / 1024 / 1024).toFixed(2)} MB</div>
       </div>
       <form
         name="draganddropform-name"
         method="post"
         data-netlify="true"
         data-netlify-honeypot="bot-field"
+        onSubmit={handleSubmit}
       >
         <p>
           <label>
