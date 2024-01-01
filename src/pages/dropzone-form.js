@@ -110,16 +110,26 @@ function MyDropzone() {
     event.preventDefault();
 
     const formData = new FormData(event.target);
+    //const formData = new FormData();
 
+    // Log FormData contents
+    console.log("FormData (after creation from event):");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     // Append the form name
-    formData.append("form-name", "draganddropform-name");
+    //formData.append("form-name", "draganddropform-name");
 
     // Append each file to the form data
     allFiles.forEach((file, index) => {
-      formData.append(`file${index}`, file);
+      formData.set(`file${index}`, file);
     });
-    console.log("allFiles");
-    console.log(allFiles);
+
+    // Log FormData contents
+    console.log("FormData (after appending):");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     try {
       const response = await fetch("/", {
         method: "POST",
