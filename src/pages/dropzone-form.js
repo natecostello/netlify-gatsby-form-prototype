@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 
 function MyDropzone() {
   const [allFiles, setAllFiles] = useState([]);
+  const [allFilesPreviews, setAllFilesPreviews] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const pdfThumbnail = "/pdfThumbnail.png";
 
@@ -10,7 +11,8 @@ function MyDropzone() {
     (acceptedFiles) => {
       const maxFilesSize = 8 * 1024 * 1024; // 8 MB in bytes
       const maxFiles = 10; // Maximum number of files
-
+      console.log("acceptedFiles:");
+      console.log(acceptedFiles);
       // Calculate the size of the new files
       const newSize = acceptedFiles.reduce((acc, file) => acc + file.size, 0);
 
@@ -38,15 +40,20 @@ function MyDropzone() {
             : URL.createObjectURL(file),
       }));
 
+      // Update all files previews list
+      setAllFilesPreviews((currentFilesPreviews) =>
+        [...currentFilesPreviews, ...newFilesWithPreview].slice(0, maxFiles)
+      );
+
       // Update all files list
       setAllFiles((currentFiles) =>
-        [...currentFiles, ...newFilesWithPreview].slice(0, maxFiles)
+        [...currentFiles, ...acceptedFiles].slice(0, maxFiles)
       );
     },
     [totalSize, allFiles]
   );
 
-  const thumbs = allFiles.map((file, index) => (
+  const thumbs = allFilesPreviews.map((file, index) => (
     <div
       key={`${file.path}-${index}`}
       style={{
@@ -83,12 +90,12 @@ function MyDropzone() {
   // Clean up the URLs when the component unmounts
   useEffect(() => {
     return () =>
-      allFiles.forEach((file) => {
+      allFilesPreviews.forEach((file) => {
         if (file.type !== "application/pdf") {
           URL.revokeObjectURL(file.preview);
         }
       });
-  }, [allFiles]);
+  }, [allFilesPreviews]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -111,7 +118,8 @@ function MyDropzone() {
     allFiles.forEach((file, index) => {
       formData.append(`file${index}`, file);
     });
-
+    console.log("allFiles");
+    console.log(allFiles);
     try {
       const response = await fetch("/", {
         method: "POST",
