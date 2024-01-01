@@ -118,7 +118,7 @@ function MyDropzone() {
       console.log(key, value);
     }
     // Append the form name
-    //formData.append("form-name", "draganddropform-name");
+    formData.append("form-name", "draganddropform-name");
 
     // Append each file to the form data
     allFiles.forEach((file, index) => {
