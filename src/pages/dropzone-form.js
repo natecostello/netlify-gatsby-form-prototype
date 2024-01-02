@@ -1,3 +1,4 @@
+import { navigate } from "gatsby";
 import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -11,9 +12,6 @@ function MyDropzone() {
     (acceptedFiles) => {
       const maxFilesSize = 8 * 1024 * 1024; // 8 MB in bytes
       const maxFiles = 10; // Maximum number of files
-      console.log("acceptedFiles:");
-      console.log(acceptedFiles);
-      // Calculate the size of the new files
       const newSize = acceptedFiles.reduce((acc, file) => acc + file.size, 0);
 
       // Check if adding new files exceeds the size limit
@@ -22,7 +20,7 @@ function MyDropzone() {
         return;
       }
 
-      // Check if adding new files exceeds the size limit
+      // Check if adding new files exceeds the number limit
       if (allFiles.length + acceptedFiles.length > maxFiles) {
         alert("Adding these files would exceed the 10 file limit.");
         return;
@@ -69,6 +67,10 @@ function MyDropzone() {
         src={file.preview}
         style={{ width: "100%", height: "100px" }}
         alt={file.path}
+        // Revoke data uri after image is loaded
+        onLoad={() => {
+          URL.revokeObjectURL(file.preview);
+        }}
       />
       <p
         style={{
@@ -112,43 +114,20 @@ function MyDropzone() {
     const formData = new FormData(event.target);
     //const formData = new FormData();
 
-    // Log FormData contents
-    console.log("FormData (after creation from event):");
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
     // Append the form name
-    formData.append("form-name", "draganddropform-name");
+    //formData.append("form-name", "draganddropform-name");
 
     // Append each file to the form data
     allFiles.forEach((file, index) => {
       formData.set(`file${index}`, file);
     });
 
-    // Log FormData contents
-    console.log("FormData (after appending):");
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-    try {
-      const response = await fetch("/", {
-        method: "POST",
-        body: formData,
-        // headers: {
-        //   Accept: "application/x-www-form-urlencoded;charset=UTF-8",
-        //   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        // },
-      });
-
-      if (response.ok) {
-        alert("Form submitted successfully!");
-        // Additional success handling
-      } else {
-        alert("Form submission failed!");
-      }
-    } catch (error) {
-      alert("An error occurred:", error.message);
-    }
+    const response = await fetch("/", {
+      method: "POST",
+      body: formData,
+    })
+      .then(() => navigate("/"))
+      .catch((error) => alert(error));
   };
 
   return (
@@ -165,15 +144,16 @@ function MyDropzone() {
         <div>Total Size: {(totalSize / 1024 / 1024).toFixed(2)} MB</div>
       </div>
       <form
-        name="draganddropform-name"
+        name="drag-and-drop"
         method="post"
         data-netlify="true"
         data-netlify-honeypot="bot-field"
         onSubmit={handleSubmit}
       >
+        <input type="hidden" name="form-name" value="dropzone" />
         <p>
           <label>
-            Your name:
+            Your full name:
             <br />
             <input type="text" name="name" />
           </label>
@@ -181,11 +161,6 @@ function MyDropzone() {
         <p>
           <button type="submit">Send</button>
         </p>
-        <input
-          type="hidden"
-          name="draganddropform-name"
-          value="draganddropform-name"
-        />
         <input type="file" style={{ display: "none" }} name="file0" />
         <input type="file" style={{ display: "none" }} name="file1" />
         <input type="file" style={{ display: "none" }} name="file2" />
