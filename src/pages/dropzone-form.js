@@ -122,7 +122,7 @@ function MyDropzone() {
       formData.set(`file${index}`, file);
     });
 
-    const response = await fetch("/", {
+    fetch("/", {
       method: "POST",
       body: formData,
     })
