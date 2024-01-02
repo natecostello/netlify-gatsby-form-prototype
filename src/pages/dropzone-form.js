@@ -127,13 +127,33 @@ function MyDropzone() {
       console.log(key, value);
     }
 
-    fetch("/", {
-      method: "POST",
-      body: formData,
-    })
-      //.then(() => navigate("/"))
-      .then(() => alert("Success!"))
-      .catch((error) => alert(error));
+    // fetch("/", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   //.then(() => navigate("/"))
+    //   .then(() => alert("Success!"))
+    //   .catch((error) => alert(error));
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData,
+        // headers: {
+        //   Accept: "application/x-www-form-urlencoded;charset=UTF-8",
+        //   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        // },
+      });
+
+      if (response.ok) {
+        alert("Form submitted successfully!");
+        // Additional success handling
+      } else {
+        alert("Form submission failed!");
+      }
+    } catch (error) {
+      alert("An error occurred:", error.message);
+    }
   };
 
   return (
