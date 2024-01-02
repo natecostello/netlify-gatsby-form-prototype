@@ -122,11 +122,17 @@ function MyDropzone() {
       formData.set(`file${index}`, file);
     });
 
+    //log formData
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     fetch("/", {
       method: "POST",
       body: formData,
     })
-      .then(() => navigate("/"))
+      //.then(() => navigate("/"))
+      .then(() => alert("Success!"))
       .catch((error) => alert(error));
   };
 
