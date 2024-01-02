@@ -115,7 +115,7 @@ function MyDropzone() {
     //const formData = new FormData();
 
     // Append the form name
-    formData.append("form-name", "drag--and--drop");
+    formData.append("form-name", "drag-and-drop");
 
     // Append each file to the form data
     allFiles.forEach((file, index) => {
