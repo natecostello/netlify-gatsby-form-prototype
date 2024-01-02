@@ -115,7 +115,7 @@ function MyDropzone() {
     //const formData = new FormData();
 
     // Append the form name
-    //formData.append("form-name", "draganddropform-name");
+    formData.append("form-name", "drag--and--drop");
 
     // Append each file to the form data
     allFiles.forEach((file, index) => {
@@ -156,7 +156,7 @@ function MyDropzone() {
         data-netlify-honeypot="bot-field"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="form-name" value="dropzone" />
+        {/* <input type="hidden" name="form-name" value="dropzone" /> */}
         <p>
           <label>
             Your full name:
